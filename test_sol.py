@@ -71,6 +71,19 @@ def test_phase_handoff_compiler():
     assert 0.45 < bad < 0.55
 
 
+def test_depth_spectrometer():
+    m = load_numbered("08_depth_spectrometer.py", "depth_spectrometer")
+    cfg = m.DepthSpectrometerConfig()
+    means = m.port_means(cfg)
+    depths = m.choose_depths(cfg, means)
+    assert depths == (4, 5, 6)
+    active = m.classify_accuracy(cfg, depths, trials=12000, seed=44, means=means)
+    final = m.classify_accuracy(cfg, (40, 40, 40), trials=12000, seed=45, means=means)
+    assert active > 0.72
+    assert final < 0.25
+    assert int(np.argmax(m.fisher_by_depth(cfg)) + 1) == 5
+
+
 if __name__ == "__main__":
     test_exact_jacobian()
     test_active_probe_unique()
@@ -78,4 +91,5 @@ if __name__ == "__main__":
     test_zombie_memory_audit()
     test_behavior_gauge_doctor()
     test_phase_handoff_compiler()
+    test_depth_spectrometer()
     print("SOL smoke tests: PASS")
