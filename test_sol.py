@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 from solcore import make_pulse_probe, run_probe, finite_difference_jacobian, greedy_probe_nodes
 from importlib.util import spec_from_file_location, module_from_spec
@@ -7,7 +8,9 @@ from pathlib import Path
 def load_numbered(name: str, module_name: str):
     path = Path(__file__).with_name(name)
     spec = spec_from_file_location(module_name, path)
-    m = module_from_spec(spec); spec.loader.exec_module(m)
+    m = module_from_spec(spec)
+    sys.modules[module_name] = m
+    spec.loader.exec_module(m)
     return m
 
 
