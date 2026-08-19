@@ -1,0 +1,3 @@
+numpy>=1.24
+# Only SOL-03 needs torch. The other demos are NumPy-only.
+torch>=2.1
